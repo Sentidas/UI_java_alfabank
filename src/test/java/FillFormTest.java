@@ -13,7 +13,7 @@ public class FillFormTest extends TestBase {
     void fillFullName() {
 
         new FillFormPage().setFullFio(data.lastName, data.firstName, data.middleName)
-                .clickSubmit()
+                .clickButtonNext()
                 .checkResultLastName(data.lastName)
                 .checkResultFirstName(data.firstName)
                 .checkResultMiddleName(data.middleName)
@@ -27,7 +27,7 @@ public class FillFormTest extends TestBase {
     @DisplayName("Проверка ввода ФИО при отсутствии отчества")
     void NotExistsMiddleName() {
         new FillFormPage().setLastAndFirstName(data.lastName, data.firstName)
-                .clickSubmit()
+                .clickButtonNext()
                 .checkResultDataWarning("Проверьте и заполните недостающие поля")
                 .checkToBeTextErrorMiddleName("Поле обязательно для заполнения")
                 .checkToBeIconErrorMiddleName()
@@ -41,7 +41,7 @@ public class FillFormTest extends TestBase {
     void fullFirstAndLastName() {
 
         new FillFormPage().setLastAndFirstName(data.firstName, data.lastName)
-                .clickSubmit()
+                .clickButtonNext()
                 .checkResultDataWarning("Проверьте и заполните недостающие поля")
                 .checkToBeTextErrorMiddleName("Поле обязательно для заполнения")
                 .checkToBeIconErrorMiddleName();
@@ -52,7 +52,7 @@ public class FillFormTest extends TestBase {
     void notFullName() {
 
         new FillFormPage()
-                .clickSubmit()
+                .clickButtonNext()
                 .checkResultDataWarning("Проверьте и заполните недостающие поля")
                 .checkToBeTextErrorFullName("Поле обязательно для заполнения")
                 .checkToBeIconErrorFullName();
@@ -63,8 +63,8 @@ public class FillFormTest extends TestBase {
     void fillFullNameWithOnlyLastName() {
 
         new FillFormPage()
-                .setFirstName(data.lastName)
-                .clickSubmit()
+                .setLastName(data.lastName)
+                .clickButtonNext()
                 .checkResultDataWarning("Проверьте и заполните недостающие поля")
                 .checkToBeTextErrorFirstName("Поле обязательно для заполнения")
                 .checkToBeIconErrorFirstName()
