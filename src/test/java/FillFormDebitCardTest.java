@@ -1,5 +1,6 @@
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
+import data.DataGeneration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,8 @@ import static com.codeborne.selenide.Selenide.open;
 
 @DisplayName("Тесты на заполнение ФИО клиента при заказе дебетовой карты")
 public class FillFormDebitCardTest {
+
+    DataGeneration data = new DataGeneration();
 
     @BeforeEach
     void openForm() {
@@ -31,13 +34,14 @@ public class FillFormDebitCardTest {
     @Test
     @DisplayName("Проверка ввода ФИО в одно поле и разбивка на поля: Фамилия, Имя, Отчество")
     void fillFullName() {
-        $("[data-test-id='caption-fullName']").scrollTo().shouldHave(text("Укажите точно как в паспорте"));
-        $("[name = 'fullName']").setValue("Ковылев Артур Макарович ").pressEnter();
-        $("[data-test-id='button']").$(byText("Продолжить")).scrollTo().click();
 
-        $("[name=lastName]").shouldHave(value("Ковылев"));
-        $("[name=firstName]").shouldHave(value("Артур"));
-        $("[name=middleName]").shouldHave(value("Макарович"));
+        $("[data-test-id='caption-fullName']").scrollTo().shouldHave(text("Укажите точно как в паспорте"));
+        $("[name = 'fullName']").setValue(data.lastName + " " + data.firstName + " " + data.middleName).pressEnter();
+        $("[data-test-id='button']").scrollTo().$(byText("Продолжить")).click();
+
+        $("[name=lastName]").shouldHave(value(data.lastName));
+        $("[name=firstName]").shouldHave(value(data.firstName));
+        $("[name=middleName]").shouldHave(value(data.middleName));
         $("[data-test-id=fio-data-warning]")
                 .shouldHave(text("Проверьте, что введённые данные совпадают с паспортными"));
         $("[data-test-id=field-fio-warning-icon]").shouldBe();
@@ -48,18 +52,18 @@ public class FillFormDebitCardTest {
     void NotExistsMiddleName() {
 
         $("[data-test-id='caption-fullName']").scrollTo().shouldHave(text("Укажите точно как в паспорте"));
-        $("[name = 'fullName']").setValue("Ковылев Артур ").pressEnter();
-        $("[data-test-id='button']").$(byText("Продолжить")).scrollTo().click();
+        $("[name = 'fullName']").setValue(data.lastName + " " + data.firstName).pressEnter();
+        $("[data-test-id='button']").scrollTo().$(byText("Продолжить")).click();
         $("[data-test-id=fio-data-warning]")
                 .shouldHave(text("Проверьте и заполните недостающие поля"));
         $("[data-test-id=field-fio-warning-icon]").shouldBe();
         $("p[data-test-id=captionError-middleName]")
                 .shouldHave(text("Поле обязательно для заполнения"));
         $("[data-test-id=cancel-button]").shouldBe();
-        $("[data-test-selected=false]").click();
+        $("[data-test-selected=false]").scrollTo().click();
 
-        $("[name=lastName]").shouldHave(value("Ковылев"));
-        $("[name=firstName]").shouldHave(value("Артур"));
+        $("[name=lastName]").shouldHave(value(data.lastName));
+        $("[name=firstName]").shouldHave(value(data.firstName));
         $("[name=middleName]").shouldHave(value("-"));
         $("[data-test-id=fio-data-warning]")
                 .shouldHave(text("Проверьте, что введённые данные совпадают с паспортными"));
@@ -71,11 +75,11 @@ public class FillFormDebitCardTest {
     void fullFirstAndLastName() {
 
         $("[data-test-id='caption-fullName']").scrollTo().shouldHave(text("Укажите точно как в паспорте"));
-        $("[name = 'fullName']").setValue("Ковылев Артур ").pressEnter();
-        $("[data-test-id='button']").$(byText("Продолжить")).scrollTo().click();
+        $("[name = 'fullName']").setValue(data.lastName + " " + data.firstName).pressEnter();
+        $("[data-test-id='button']").scrollTo().$(byText("Продолжить")).click();
 
-        $("[name=lastName]").shouldHave(value("Ковылев"));
-        $("[name=firstName]").shouldHave(value("Артур"));
+        $("[name=lastName]").shouldHave(value(data.lastName));
+        $("[name=firstName]").shouldHave(value(data.firstName));
         $("[data-test-id=fio-data-warning]")
                 .shouldHave(text("Проверьте и заполните недостающие поля"));
         $("[data-test-id=field-fio-warning-icon]").shouldBe();
@@ -88,7 +92,7 @@ public class FillFormDebitCardTest {
     @DisplayName("Проверка поля ФИО без заполнения данными")
     void notFullName() {
 
-        $("[data-test-id='button']").$(byText("Продолжить")).scrollTo().click();
+        $("[data-test-id='button']").scrollTo().$(byText("Продолжить")).click();
         $("[data-test-id=field-fio-warning-icon]").shouldBe();
         $("[data-test-id=captionError-fullName]")
                 .shouldHave(text("Поле обязательно для заполнения"));
@@ -99,10 +103,10 @@ public class FillFormDebitCardTest {
     @DisplayName("Проверка ввода ФИО без указания имени и отчества")
     void fillFullNameEn() {
         $("[data-test-id='caption-fullName']").scrollTo().shouldHave(text("Укажите точно как в паспорте"));
-        $("[name = 'fullName']").setValue("Ковылев").pressEnter();
+        $("[name = 'fullName']").setValue(data.lastName).pressEnter();
         $("[data-test-id='button']").$(byText("Продолжить")).scrollTo().click();
 
-        $("[name=lastName]").shouldHave(value("Ковылев"));
+        $("[name=lastName]").shouldHave(value(data.lastName));
         $("[data-test-id=fio-data-warning]")
                 .shouldHave(text("Проверьте и заполните недостающие поля"));
         $("[data-test-id=field-fio-warning-icon]").shouldBe();
